@@ -1,20 +1,24 @@
 package com.visualpathit.account.controller;
 
-import com.visualpathit.account.model.User;
-import com.visualpathit.account.service.ProducerService;
-import com.visualpathit.account.service.SecurityService;
-import com.visualpathit.account.service.UserService;
-import com.visualpathit.account.utils.MemcachedUtils;
-import com.visualpathit.account.validator.UserValidator;
+import java.util.List;
+
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.validation.Valid;
-import java.util.List;
-import java.util.UUID;
+import com.visualpathit.account.model.User;
+import com.visualpathit.account.service.SecurityService;
+import com.visualpathit.account.service.UserService;
+import com.visualpathit.account.utils.MemcachedUtils;
+import com.visualpathit.account.validator.UserValidator;
 
 @Controller
 public class UserController {
@@ -28,9 +32,6 @@ public class UserController {
     @Autowired
     private UserValidator userValidator;
 
-    @Autowired
-    private ProducerService producerService;
-
     @GetMapping("/registration")
     public String registration(Model model) {
         model.addAttribute("userForm", new User());
@@ -38,6 +39,7 @@ public class UserController {
     }
 
     @PostMapping("/registration")
+    @SuppressWarnings("null")
     public String registration(@ModelAttribute("userForm") @Valid User userForm, BindingResult bindingResult, Model model) {
         userValidator.validate(userForm, bindingResult);
 
@@ -157,9 +159,5 @@ public class UserController {
         user.setSecondaryOccupation(userForm.getSecondaryOccupation());
         user.setSkills(userForm.getSkills());
         user.setWorkingExperience(userForm.getWorkingExperience());
-    }
-
-    private static String generateString() {
-        return "uuid = " + UUID.randomUUID().toString();
     }
 }
